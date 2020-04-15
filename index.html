@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test node</title>
+</head>
+<body>
+    <div>
+        <input type='text' name="username" value="" id="username"/>
+        <input type='password' name="password" value="" id="password"/>
+        <button id="submit">submit</button>
+    </div>
+    <script>
+        window.onload = function () {
+            document.getElementById("submit").addEventListener('click', function () {
+                var username = document.getElementById("username").innerText();
+                var password = document.getElementById("password").innerText();
+                var body = document.getElementsByTagName('body')[0]
+                var xhr = new XMLHttpRequest()
+                xhr.open('POST', '/localhost:8090', {username, password}, false)
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        body.innerHTML = xhr.responseText
+                    }
+                }
+            })
+            
+        }
+    </script>
+</body>
+</html>
