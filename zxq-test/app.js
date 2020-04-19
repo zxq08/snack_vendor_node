@@ -4,9 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 // var ejs = require("ejs");
+const bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var userRouter = require('./routes/user');
 var bannersRouter = require('./routes/banners');
 var addressRouter = require('./routes/address');
 var app = express();
@@ -18,13 +19,15 @@ app.set('view engine', 'jade');
 // app.set('view engine', 'html');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());//数据JSON类型
+app.use(bodyParser.urlencoded({ extended: false }));//解析post请求数据
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+app.use('/', userRouter);
 // app.use('/banners', bannersRouter);
 app.use('/address', addressRouter);
 

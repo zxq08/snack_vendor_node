@@ -8,15 +8,15 @@ let db = mysql.createConnection({
     user: 'zxq',
     password: 'zxq0825',
     database: "zerg"
-  });
-  db.connect((err) => {
-    if(err) {
-      res.json({
-        status: "1",
-        msg: err.message,
-      })
-    }
-  })
+});
+db.connect((err) => {
+  if(err) {
+    res.json({
+      status: "1",
+      msg: err.message,
+    })
+  }
+})
 
 router.get('/addressList', function (req, res, next) {
     let sql = `select * from user_address where is_delete = 0`
