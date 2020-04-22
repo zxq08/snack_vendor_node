@@ -14,7 +14,7 @@ let db = mysql.createConnection({
 db.connect((err) => {
   if(err) {
     res.json({
-      status: "1",
+      code: "1",
       msg: err.message,
     })
   }
