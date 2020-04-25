@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const mysql = require('mysql');
+const jwt = require('jsonwebtoken');
+const sercet = "love_sasa";
 
 // 连接数据库
 let db = mysql.createConnection({
@@ -20,6 +22,10 @@ db.connect((err) => {
 
 // 获取用户地址
 router.get('/addressById', function (req, res, next) {
+    let headers = req.headers;
+    console.log(headers.token);
+    let tokenStr = headers.token || 'error' ;
+    var id = getUserId(tokenStr);
     console.log(req.query.id);
     let id = req.query.id
     let sql = `select * from user_address where is_delete = 0 and user_id = '${id}'`
@@ -151,4 +157,10 @@ router.post('/updateAddressById', function (req, res, next) {
   })
 })
 
+function getUserId (userToken) {
+  let tokenData = jwt.verify(tokenStr, sercet);
+  console.log(tokenData)
+  var username = tokenData.username
+  var password = tokenData.password
+}
 module.exports = router

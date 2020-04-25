@@ -1,22 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
-
-// 连接数据库
-let db = mysql.createConnection({
-  host: 'localhost',
-  user: 'zxq',
-  password: 'zxq0825',
-  database: "zerg"
-});
-db.connect((err) => {
-  if(err) {
-    res.json({
-      code: "1",
-      msg: err.message,
-    })
-  }
-})
+const db = require('./db/db.js')
 
 router.get('/', function (req, res, next) {
     console.log(req.query.id);
