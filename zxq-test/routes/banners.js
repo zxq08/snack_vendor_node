@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const db = require('./db/db.js')
+const db = require('../db/db.js')
 
 router.get('/', function (req, res, next) {
     console.log(req.query.id);

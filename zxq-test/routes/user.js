@@ -1,24 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
+const db = require('../db/db.js')
 const jwt = require('jsonwebtoken');
 const sercet = "love_sasa";
-
-// 连接数据库
-let db = mysql.createConnection({
-    host: 'localhost',
-    user: 'zxq',
-    password: 'zxq0825',
-    database: "zerg"
-});
-db.connect((err) => {
-  if(err) {
-    res.json({
-      code: "1",
-      msg: err.message,
-    })
-  }
-})
 
 // 登录验证,未注册就注册且自动登录
 router.post('/login', function (req, res) {

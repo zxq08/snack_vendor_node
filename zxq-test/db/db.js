@@ -13,13 +13,13 @@ module.exports = {
                 })
             }
         })
-        db.query(sql, function (error, result, field) {
+        db.query(sql, function (err, result) {
             if(err){
                 console.log('数据操作失败');
                 throw err;
             }
-            callback && callback(JSON.parse(JSON.stringify(results)), JSON.parse(JSON.stringify(fields)));
-            connection.end(function(err){
+            callback && callback(err, result);
+            db.end(function(err){
                 if(err){
                     console.log('关闭数据库连接失败！');
                     throw err;
