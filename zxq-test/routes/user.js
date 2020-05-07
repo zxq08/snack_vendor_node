@@ -10,7 +10,7 @@ router.post('/login', function (req, res) {
 　let username = params.username;
 　let password = params.password;
   let sql = `SELECT * FROM user_info WHERE username = '${username}'`
-  var psw = '';
+  let psw = '';
   db.query(sql, (err, result0) => {
     if (err) {
       res.json({
