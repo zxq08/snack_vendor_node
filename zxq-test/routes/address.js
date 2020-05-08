@@ -109,109 +109,184 @@ router.get('/AddressByid', function (req, res, next) {
 
 // 删除用户地址
 router.get('/deleteAddressById', function (req, res, next) {
-    console.log(req.query.id);
-    let id = req.query.id
-    let sql = `update user_address set is_delete = 1 where user_id = '${id}'`
-    console.log(sql);
-    return db.query(sql, (err, result) => {
-      console.log(result)
-      if(err) {
-        res.json({
-          code: "1",
-          msg: err.message,
-        })
-      } else {
-        res.json({
-          code: "0",
-          msg: 'success',
-          data: {}
-        })
-      }
-    })
+  let headers = req.headers;
+  let tokenStr = headers.token || 'error' ;
+  let add_id = req.query.id;
+  let tokenData = jwt.verify(tokenStr, sercet);
+  let username = tokenData.username
+  let sql = `SELECT id FROM user_info WHERE username = '${username}'`
+  db.query(sql, (err, result0) => {
+    if (err) {
+      return err;
+    } else {
+      let userid = result0[0].id;
+      let sql = `update user_address set is_delete = 1 where user_id = '${userid}' and id = '${add_id}'`
+      console.log(sql);
+      return db.query(sql, (err, result) => {
+        console.log(result)
+        if(err) {
+          res.json({
+            code: "1",
+            msg: err.message,
+          })
+        } else {
+          res.json({
+            code: "0",
+            msg: 'success',
+            data: {}
+          })
+        }
+      })
     next();
+    }
+  })
 })
 
 // 添加用户地址
-router.get('/addAddressById', function (req, res, next) {
-  console.log(req.query.id);
-  let id = req.query.id
-  let sql = `update user_address set ... where user_id = '${id}'`
-  console.log(sql);
-  return db.query(sql, (err, result) => {
-    console.log(result)
-    if(err) {
-      res.json({
-        code: "1",
-        msg: err.message,
-      })
+router.post('/addAddress', function (req, res, next) {
+  let headers = req.headers;
+  let tokenStr = headers.token || 'error' ;
+  let params = req.body;
+  let add_name = params.name;
+  let add_mobile = params.mobile;
+  let add_province = params.province;
+  let add_city = params.city;
+  let add_country = params.country;
+  let add_detail = params.detail;
+  let add_default = params.isDefault;
+  let add_label = params.label;
+  let tokenData = jwt.verify(tokenStr, sercet);
+  let username = tokenData.username
+  let sql = `SELECT id FROM user_info WHERE username = '${username}'`
+  db.query(sql, (err, result0) => {
+    if (err) {
+      return err;
     } else {
-      res.json({
-        code: "0",
-        msg: 'success',
-        data: {}
-      })
+      let userid = result0[0].id;
+      if (add_default) {
+        let sql = `update user_address set is_default = 0 where user_id = '${userid}'`
+        return db.query(sql, (err, result) => {
+          if(err) {
+            res.json({
+              code: "1",
+              msg: err.message,
+            })
+          } else {
+            let sql = `insert into user_address (name,mobile,province,city,country,detail,user_id,is_default,label) values 
+                ('${add_name}','${add_mobile}','${add_province}','${add_city}','${add_country}','${add_detail}','${userid}','${add_default}','${add_label}')`
+            return db.query(sql, (err, result) => {
+              if(err) {
+                res.json({
+                  code: "1",
+                  msg: err.message,
+                })
+              } else {
+                res.json({
+                  code: "0",
+                  msg: 'success',
+                  data: result
+                })
+              }
+            })
+            next();
+          }
+        })
+      } else {
+        let sql = `insert into user_address (name,mobile,province,city,country,detail,user_id,is_default,label) values 
+                ('${add_name}','${add_mobile}','${add_province}','${add_city}','${add_country}','${add_detail}','${userid}','${add_default}','${add_label}')`
+        return db.query(sql, (err, result) => {
+          if(err) {
+            res.json({
+              code: "1",
+              msg: err.message,
+            })
+          } else {
+            res.json({
+              code: "0",
+              msg: 'success',
+              data: result
+            })
+          }
+        })
+        next();
+      } 
     }
   })
-  next();
 })
 
 // 修改用户地址
 router.post('/updateAddressById', function (req, res, next) {
-  let params = req.body;
   let headers = req.headers;
-  console.log(headers.token);
   let tokenStr = headers.token || 'error' ;
-　let address = params.address;
-  let address_id = address.id;
+  let params = req.body;
+  let add_id = params.id;
+  let add_name = params.name;
+  let add_mobile = params.mobile;
+  let add_province = params.province;
+  let add_city = params.city;
+  let add_country = params.country;
+  let add_detail = params.detail;
+  let add_default = params.isDefault;
+  let add_label = params.label;
   let tokenData = jwt.verify(tokenStr, sercet);
-  console.log(tokenData)
-  console.log(address_id)
-  var username = tokenData.username
-  var password = tokenData.password
-  let sql = `SELECT * FROM user_info WHERE username = '${username}'`
-  db.query(sql, (err, result_address) => {
+  let username = tokenData.username
+  let sql = `SELECT id FROM user_info WHERE username = '${username}'`
+  db.query(sql, (err, result0) => {
     if (err) {
-      console.log(err)
-      res.json({
-        code: 1,
-        msg: 'token.username is wrong',
-        data: ''
-      })
-      return false;
-    } else if (password === result_address[0].password) {
-      if (address) {
-        const user_id = result_address.id;
-        let update_sql = `update user_address set ... where id = '${address_id}' && user_id = '${user_id}'`;
-        db.query(update_sql, (err, result_avatarurl) => {
-          if (err) {
-            console.log(err)
+      return err;
+    } else {
+      let userid = result0[0].id;
+      if (add_default) {
+        let sql = `update user_address set is_default = 0 where user_id = '${userid}'`
+        return db.query(sql, (err, result) => {
+          if(err) {
             res.json({
-              code: 1,
-              msg: 'update failed',
-              data: ''
+              code: "1",
+              msg: err.message,
             })
-            return false;
           } else {
-            res.json({
-              code: 0,
-              msg: 'update address success',
-              data: ''
+            let sql = `update user_address set
+                name='${add_name}',mobile='${add_mobile}',province='${add_province}',city='${add_city}',
+                country='${add_country}',detail='${add_detail}',is_default='${add_default}',label='${add_label}'
+                where user_id='${userid}' and id='${add_id}'`
+            return db.query(sql, (err, result) => {
+              if(err) {
+                res.json({
+                  code: "1",
+                  msg: err.message,
+                })
+              } else {
+                res.json({
+                  code: "0",
+                  msg: 'success',
+                  data: result
+                })
+              }
             })
+            next();
           }
         })
       } else {
-        res.json({
-          code: 1,
-          msg: 'address is wrong',
-          data: ''
+        let sql = `update user_address set
+            name='${add_name}',mobile='${add_mobile}',province='${add_province}',city='${add_city}',
+            country='${add_country}',detail='${add_detail}',is_default='${add_default}',label='${add_label}'
+            where user_id='${userid}' and id='${add_id}'`
+        return db.query(sql, (err, result) => {
+          if(err) {
+            res.json({
+              code: "1",
+              msg: err.message,
+            })
+          } else {
+            res.json({
+              code: "0",
+              msg: 'success',
+              data: result
+            })
+          }
         })
-      }
-    } else {
-      res.json({
-        code: 1,
-        msg: 'token.password is wrong',
-        data: ''
-      })
+        next();
+      } 
     }
   })
 })
