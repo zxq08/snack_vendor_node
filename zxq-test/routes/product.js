@@ -2,10 +2,31 @@ var express = require('express');
 var router = express.Router();
 const db = require('../db/db.js')
 
+// 所有商品
+router.get('/products', function (req, res, next) {
+  let id = req.query.id
+  let sql = `SELECT id, name, price, stock, category_id, main_img_url, summary FROM product`
+  return db.query(sql, (err, result) => {
+    if(err) {
+      res.json({
+        code: 1,
+        msg: err.message,
+      })
+    } else {
+      res.json({
+        code: 0,
+        msg: 'success',
+        data: result
+      })
+    }
+  })
+  next();
+})
+
 // 商品详情
 router.get('/productById', function (req, res, next) {
     let id = req.query.id
-    let sql = `SELECT id, name, price, stock, main_img_url, summary FROM product WHERE id = '${id}'`
+    let sql = `SELECT id, name, price, stock, category_id, main_img_url, summary FROM product WHERE id = '${id}'`
     return db.query(sql, (err, result) => {
       if(err) {
         res.json({
@@ -15,7 +36,7 @@ router.get('/productById', function (req, res, next) {
       } else {
         res.json({
           code: 0,
-          msg: '',
+          msg: 'success',
           data: result
         })
       }
@@ -26,8 +47,7 @@ router.get('/productById', function (req, res, next) {
 // 新品
 router.get('/productTop', function (req, res, next) {
   let num = req.query.num
-  let sql = `SELECT id, name, price, stock, main_img_url, summary FROM product order by create_time desc limit ${num}`
-  console.log(sql);
+  let sql = `SELECT id, name, price, stock, category_id, main_img_url, summary FROM product order by create_time desc limit ${num}`
   return db.query(sql, (err, result) => {
     if(err) {
       res.json({
@@ -37,7 +57,7 @@ router.get('/productTop', function (req, res, next) {
     } else {
       res.json({
         code: 0,
-        msg: '',
+        msg: 'success',
         data: result
       })
     }

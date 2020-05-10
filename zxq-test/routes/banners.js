@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
       } else {
         res.json({
           code: 0,
-          msg: '',
+          msg: 'success',
           data: {
             count: result.length,
             list: result

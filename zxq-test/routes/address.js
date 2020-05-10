@@ -26,7 +26,7 @@ router.get('/allAddressByUser', function (req, res, next) {
           } else {
             res.json({
               code: "0",
-              msg: '',
+              msg: 'success',
               data: result
             })
           }
@@ -58,7 +58,7 @@ router.get('/defaultAddressByUser', function (req, res, next) {
         } else {
           res.json({
             code: "0",
-            msg: '',
+            msg: 'success',
             data: result
           })
         }
@@ -91,7 +91,7 @@ router.get('/AddressByid', function (req, res, next) {
         } else {
           res.json({
             code: "0",
-            msg: '',
+            msg: 'success',
             data: result
           })
         }
