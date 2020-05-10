@@ -17,9 +17,7 @@ router.get('/allAddressByUser', function (req, res, next) {
       } else {
         let userid = result0[0].id;
         let sql = `select * from user_address where is_delete = 0 and user_id = '${userid}'`
-        console.log(sql);
         return db.query(sql, (err, result) => {
-          console.log(result)
           if(err) {
             res.json({
               code: "1",
@@ -51,9 +49,7 @@ router.get('/defaultAddressByUser', function (req, res, next) {
     } else {
       let userid = result0[0].id;
       let sql = `select * from user_address where is_delete = 0 and user_id = '${userid}' and is_default = 1`
-      console.log(sql);
       return db.query(sql, (err, result) => {
-        console.log(result)
         if(err) {
           res.json({
             code: "1",
@@ -86,9 +82,7 @@ router.get('/AddressByid', function (req, res, next) {
     } else {
       let userid = result0[0].id;
       let sql = `select * from user_address where is_delete = 0 and user_id = '${userid}' and id = '${add_id}'`
-      console.log(sql);
       return db.query(sql, (err, result) => {
-        console.log(result)
         if(err) {
           res.json({
             code: "1",
@@ -121,9 +115,7 @@ router.get('/deleteAddressById', function (req, res, next) {
     } else {
       let userid = result0[0].id;
       let sql = `update user_address set is_delete = 1 where user_id = '${userid}' and id = '${add_id}'`
-      console.log(sql);
       return db.query(sql, (err, result) => {
-        console.log(result)
         if(err) {
           res.json({
             code: "1",
