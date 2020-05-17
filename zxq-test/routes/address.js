@@ -139,6 +139,7 @@ router.post('/addAddress', function (req, res, next) {
   let headers = req.headers;
   let tokenStr = headers.token || 'error' ;
   let params = req.body;
+  console.log(params)
   let add_name = params.name;
   let add_mobile = params.mobile;
   let add_province = params.province;

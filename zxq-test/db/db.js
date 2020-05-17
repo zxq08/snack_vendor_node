@@ -7,10 +7,8 @@ module.exports = {
         let db = mysql.createConnection(config);
         db.connect((err) => {
             if(err) {
-                res.json({
-                code: "1",
-                msg: err.message,
-                })
+                console.log('数据操作失败');
+                throw err;
             }
         })
         db.query(sql, function (err, result) {
