@@ -127,7 +127,7 @@ router.get('/themeById', function (req, res, next) {
 
 // 商品分类
 router.get('/category', function (req, res, next) {
-  let sql = `select a.id as category_id,a.name as catogary_name,a.description, c.url ,
+  let sql = `select a.id as category_id,a.name as category_name,a.description, c.url ,
   p.id as product_id, p.name as product_name, p.main_img_url 
     from category a LEFT JOIN image c on a.topic_img_id = c.id 
   RIGHT JOIN product p on a.id = p.category_id ORDER BY category_id`

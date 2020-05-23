@@ -28,8 +28,8 @@ router.post('/login', function (req, res) {
         })
         return false;
       }
-      let sql = `INSERT into user_info (username,PASSWORD) VALUES ("'${username}'", "'${password}'")`
-      db.query(sql, (err, result1) => {
+      let sql1 = `INSERT into user_info (username,PASSWORD) VALUES ("'${username}'", "'${password}'")`
+      db.query(sql1, (err, result1) => {
         if (err) {
           res.json({
             code: 1,
@@ -43,23 +43,32 @@ router.post('/login', function (req, res) {
             password,
             'time': Date.now(),
           },sercet,{expiresIn:60*60});
-          res.json({
-            code: 0,
-            msg: 'success',
-            data: token
-          });
-        } 
+          let sql2 = `SELECT username, avatar FROM user_info WHERE username = '${username}'`
+          db.query(sql1, (err, userRes) => {
+            if (err) {
+              res.json({
+                code: 1,
+                msg: 'Register user error',
+                data: ''
+              })
+              return false;
+            } else {
+              res.json({
+                code: 0,
+                msg: 'success',
+                data: { 
+                  'token': token,
+                  'userdata': userRes[0]
+                }
+              });
+            }
+          })
+        }
       })
     } else {          // 已注册，验证登录
       resultData = result0[0]
       psw = resultData.password
       if (psw === password) {
-        var data = '';
-        req.on('data', function (chunk) {
-          data += chunk;
-        })
-        req.on('end', function () {
-        })
         const token = jwt.sign({
           username,
           password,
@@ -68,13 +77,19 @@ router.post('/login', function (req, res) {
         res.json({
           code: 0,
           msg: 'success',
-          data: token
+          data: { 
+            'token': token,
+            'userdata': {
+              username: resultData.username,
+              avatar: resultData.avatar
+            }
+          }
         });
       } else {
         res.json({
           code: 1,
-          message: "Login error",
-          data: ''
+          message: "username or password error",
+          data: 'Login error'
         })
         return false
       }
